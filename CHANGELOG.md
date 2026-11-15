@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **Glyph protocol spec v1.13: registrations only in one reserved block.** `r` and `c` now accept `U+100000`–`U+1003FF`, the first 1024 codepoints of Supplementary PUA-B, and reject the rest of the Private Use Areas with `reason=out_of_namespace`. Allowing all of PUA let a program redefine a Nerd Fonts icon, such as the git branch glyph in a prompt, and exit, leaving every later program in that session drawing its version. Raised by Kovid Goyal in [kitty#10872](https://github.com/kovidgoyal/kitty/issues/10872); keeping the block free in Nerd Fonts is tracked in [nerd-fonts#2105](https://github.com/ryanoasis/nerd-fonts/issues/2105). The block is as large as the glossary, so FIFO eviction is gone, and clients must register every block codepoint they emit, since registrations outlive the program that made them. The spec no longer claims an `svg2glyf` helper ships with Rio. Rio itself still accepts registrations anywhere in PUA until its implementation follows.
+
 ## 0.5.32 (2026-11-15)
 
 - **Windows ships a modern ConPTY.** The installer and the new portable `.zip` put `conpty.dll` and `OpenConsole.exe` from the Windows Terminal project (1.25, MIT) next to `rio.exe`, so Rio drives a current pseudoconsole instead of the one built into Windows: sixel, iTerm2 and kitty images render, the screen is restored when a TUI exits, and the IME candidate window follows the caret, with no manual sideload. The portable `.exe` remains for this release. Rio loads `conpty.dll` from its own directory only, so a copy on `PATH` is never picked up, and a pseudoconsole that fails to open or resize is reported instead of aborting Rio ([#1767](https://github.com/raphamorim/rio/pull/1767), [#1764](https://github.com/raphamorim/rio/pull/1764), closes [#1759](https://github.com/raphamorim/rio/issues/1759), [#2031](https://github.com/raphamorim/rio/issues/2031)).
