@@ -287,6 +287,9 @@ impl<T: EventListener + Clone + std::marker::Send + 'static> ContextManager<T> {
             config.scrollback_history_limit,
         );
         terminal.set_grapheme_clustering(config.grapheme_clustering);
+        // The application answers `q;grapheme=` by shaping the cluster
+        // with the grid rasterizer (`GlyphProtocolGraphemeQuery`).
+        terminal.set_glyph_grapheme_query(true);
         terminal.blinking_cursor = cursor_state.1;
         let terminal: Arc<FairMutex<Crosswords<T>>> = Arc::new(FairMutex::new(terminal));
 
